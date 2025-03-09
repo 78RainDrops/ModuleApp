@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "666090987107",
+    "project_id": "moduleapp-cf498",
+    "storage_bucket": "moduleapp-cf498.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:666090987107:android:7d3a31290d5aafd4706256",
+        "android_client_info": {
+          "package_name": "com.tshs.moduleapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAo_P7nPNXUggsQSdsniaNjdBEz_f_-P4E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

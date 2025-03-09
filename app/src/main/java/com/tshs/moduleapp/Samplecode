@@ -1,0 +1,150 @@
+package com.tshs.moduleapp
+
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.widget.EditText
+import android.widget.Toast
+import androidx.activity.enableEdgeToEdge
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.lifecycle.lifecycleScope
+import com.google.android.material.button.MaterialButton
+import com.tshs.moduleapp.data.AppDatabase
+import com.tshs.moduleapp.data.User
+import com.tshs.moduleapp.util.PasswordHasher
+import kotlinx.coroutines.launch
+
+class MainActivity : AppCompatActivity() {
+    private lateinit var db: AppDatabase
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        enableEdgeToEdge()
+        setContentView(R.layout.account)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+
+        db = AppDatabase.getDatabase(this)
+
+        // Find views
+        val loginForm = findViewById<View>(R.id.login_form)
+        val createAccountForm = findViewById<View>(R.id.create_account_form)
+        val registerButton = loginForm.findViewById<MaterialButton>(R.id.button2)
+        val loginButton = createAccountForm.findViewById<MaterialButton>(R.id.login_button)
+        val signUpButton = createAccountForm.findViewById<MaterialButton>(R.id.register_button)
+        val emailLogin = loginForm.findViewById<EditText>(R.id.username)
+        val passwordLogin = loginForm.findViewById<EditText>(R.id.editText)
+        val regFullname = createAccountForm.findViewById<EditText>(R.id.regfullname)
+        val regGrade = createAccountForm.findViewById<EditText>(R.id.reggrade)
+        val regStrand = createAccountForm.findViewById<EditText>(R.id.regstrand)
+        val emailRegister = createAccountForm.findViewById<EditText>(R.id.username_register)
+        val passwordRegister = createAccountForm.findViewById<EditText>(R.id.editText_register)
+
+
+        // Set initial visibility
+        loginForm.visibility = View.VISIBLE
+        createAccountForm.visibility = View.GONE
+
+        // Set click listener for register button
+        registerButton.setOnClickListener {
+            loginForm.visibility = View.GONE
+            createAccountForm.visibility = View.VISIBLE
+        }
+
+        // Set click listener for login button
+        loginButton.setOnClickListener {
+            loginForm.visibility = View.VISIBLE
+            createAccountForm.visibility = View.GONE
+        }
+
+        // Set click listener for sign up button
+        signUpButton.setOnClickListener {
+            val fullName = regFullname.text.toString()
+            val grade = regGrade.text.toString()
+            val strand = regStrand.text.toString()
+            val email = emailRegister.text.toString()
+            val password = passwordRegister.text.toString()
+
+            if (fullName.isNotEmpty() && grade.isNotEmpty() && strand.isNotEmpty() && email.isNotEmpty() && password.isNotEmpty()) {
+                lifecycleScope.launch {
+                    // Check if user already exists
+                    val existingUser = db.userDao().getUserByEmail(email)
+                    if (existingUser == null) {
+                        val hashedPassword = PasswordHasher.hashPassword(password)
+                        val user = User(
+                            fullName = fullName,
+                            grade = grade,
+                            strand = strand,
+                            email = email,
+                            passwordHash = hashedPassword
+                        )
+                        db.userDao().insert(user)
+                        Toast.makeText(
+                            this@MainActivity,
+                            "User registered successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.d("User Registered", "User $email registered successfully")
+
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "User already exists",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.d(
+                            "User Registration Error",
+                            "User with email $email already exists"
+                        )
+                    }
+                }
+            } else {
+                Toast.makeText(this@MainActivity, "Please fill all fields", Toast.LENGTH_SHORT)
+                    .show()
+                Log.d("User Registration Error", "User tried to register with empty fields")
+            }
+        }
+
+        val signInButton = loginForm.findViewById<MaterialButton>(R.id.login)
+        signInButton.setOnClickListener {
+            val email = emailLogin.text.toString()
+            val password = passwordLogin.text.toString()
+            if (email.isNotEmpty() && password.isNotEmpty()) {
+                lifecycleScope.launch {
+                    val existingUser = db.userDao().getUserByEmail(email)
+                    if (existingUser != null && PasswordHasher.checkPassword(
+                            password,
+                            existingUser.passwordHash
+                        )
+                    ) {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Login successfully",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.d("Login Success", "User $email logged in successfully")
+
+                    } else {
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Invalid credentials",
+                            Toast.LENGTH_SHORT
+                        ).show()
+                        Log.d("Login Error", "User $email failed to log in")
+
+                    }
+                }
+            } else {
+                Toast.makeText(this@MainActivity, "Please fill all fields", Toast.LENGTH_SHORT)
+                    .show()
+                Log.d("Login Error", "User tried to log in with empty fields")
+
+            }
+        }
+    }
+}
