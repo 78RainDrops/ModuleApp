@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.tshs.moduleapp.account.data.LoginHelper
 import com.tshs.moduleapp.account.data.RegisterHelper
 import com.tshs.moduleapp.databinding.AccountBinding
 
@@ -12,6 +13,7 @@ class MainActivity: AppCompatActivity() {
 
     private lateinit var binding: AccountBinding
     private lateinit var registerHelper: RegisterHelper
+    private lateinit var loginHelper: LoginHelper
 
     override fun onCreate(savedInstanceState: Bundle?){
         super.onCreate(savedInstanceState)
@@ -25,6 +27,7 @@ class MainActivity: AppCompatActivity() {
         binding = AccountBinding.inflate(layoutInflater)
         setContentView(binding.root)
         registerHelper = RegisterHelper(this, binding.root)
+        loginHelper = LoginHelper(this, binding.root)
 
         //    find views
         val loginForm = findViewById<View>(R.id.login_form)
@@ -32,6 +35,7 @@ class MainActivity: AppCompatActivity() {
         val signinButton = createAccountForm.findViewById<View>(R.id.button3)
         val createAccountButton = loginForm.findViewById<View>(R.id.button2)
         val registerButton = createAccountForm.findViewById<View>(R.id.registerbtn)
+        val loginButton = loginForm.findViewById<View>(R.id.login)
 
         //    set initial visibility
         loginForm.visibility = View.VISIBLE
@@ -46,8 +50,13 @@ class MainActivity: AppCompatActivity() {
             loginForm.visibility = View.VISIBLE
             createAccountForm.visibility = View.GONE
         }
+        //register user
         registerButton.setOnClickListener{
             registerHelper.registerUser()
+        }
+
+        loginButton.setOnClickListener{
+            loginHelper.loginUser()
         }
 
     }

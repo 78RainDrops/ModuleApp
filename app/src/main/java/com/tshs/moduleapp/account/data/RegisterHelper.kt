@@ -50,9 +50,18 @@ class RegisterHelper(private val context: Context, private val rootView: View) {
         mAuth.createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener { task ->
                 if (task.isSuccessful) {
-                    val userId = mAuth.currentUser?.uid
-                    if (userId != null) {
-//                        val userId = mAuth.currentUser!!.uid
+                    val user = mAuth.currentUser
+                    if (user != null) {
+                        user?.sendEmailVerification()
+                            ?.addOnSuccessListener {
+                                Log.d("RegisterHelper", "Email verification sent.")
+                                Toast.makeText(context, "Verification email sent! Please check your inbox.", Toast.LENGTH_LONG).show()
+                            }
+                            ?.addOnFailureListener { e ->
+                                Toast.makeText(context, "Failed to send verification email!", Toast.LENGTH_LONG).show()
+                                Log.e("RegisterHelper", "Error sending email verification: ${e.message}")
+                            }
+                        val userId = mAuth.currentUser!!.uid
                         Log.d("RegisterHelper", "User registered successfully: $userId")
                         saveUserData(userId, fullname, grade, strand, email, strongPasswordTextView, progressBar)
                     } else {
