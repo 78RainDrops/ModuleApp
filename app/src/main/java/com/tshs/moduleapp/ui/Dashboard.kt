@@ -1,5 +1,6 @@
 package com.tshs.moduleapp.ui
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -8,6 +9,7 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.TextView
+import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -34,12 +36,7 @@ class Dashboard : AppCompatActivity() {
         binding = ActivityDashboardBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val toolbar: Toolbar = binding.appBarDashboard.toolbar
-        setSupportActionBar(toolbar)
-        toolbar.post{
-            addCustomeProfileButton(toolbar)
-        }
-
+        setSupportActionBar(binding.appBarDashboard.toolbar)
 
         binding.appBarDashboard.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -58,6 +55,14 @@ class Dashboard : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+
+//        userprofile
+        val userProfile = findViewById<View>(R.id.circle_profile_image)
+        userProfile.setOnClickListener{
+            val intent = Intent(this, UserProfile::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
@@ -80,21 +85,4 @@ class Dashboard : AppCompatActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    private fun addCustomeProfileButton(toolbar: Toolbar){
-//        val toolbar = binding.appBarDashboard.toolbar
-        val customView: View = LayoutInflater.from(this).inflate(R.layout.circle_user_button, toolbar, false)
-        val circleImageView = customView.findViewById<CircleImageView>(R.id.circle_profile_image)
-//        val circleTextView = customView.findViewById<TextView>(R.id.circle_profile_initials)
-
-        customView.setOnClickListener{
-
-        }
-        val layoutParams = FrameLayout.LayoutParams(
-            FrameLayout.LayoutParams.WRAP_CONTENT,
-            FrameLayout.LayoutParams.MATCH_PARENT,
-        )
-
-        layoutParams.gravity = Gravity.END or Gravity.CENTER_VERTICAL
-        toolbar.addView(customView, layoutParams)
-    }
 }
