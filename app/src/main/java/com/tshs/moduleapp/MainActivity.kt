@@ -5,9 +5,12 @@ import android.os.Bundle
 import android.view.View
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
+import com.google.firebase.auth.FirebaseAuth
 import com.tshs.moduleapp.account.data.LoginHelper
 import com.tshs.moduleapp.account.data.RegisterHelper
 import com.tshs.moduleapp.databinding.AccountBinding
+import com.tshs.moduleapp.ui.Dashboard
+import com.tshs.moduleapp.ui.UserProfile
 
 class MainActivity: AppCompatActivity() {
 
@@ -28,6 +31,12 @@ class MainActivity: AppCompatActivity() {
         setContentView(binding.root)
         registerHelper = RegisterHelper(this, binding.root)
         loginHelper = LoginHelper(this, binding.root)
+
+
+        if(FirebaseAuth.getInstance().currentUser != null){
+            startActivity(Intent(this, Dashboard::class.java))
+            finish()
+        }
 
         //    find views
         val loginForm = findViewById<View>(R.id.login_form)
@@ -58,6 +67,8 @@ class MainActivity: AppCompatActivity() {
         loginButton.setOnClickListener{
             loginHelper.loginUser()
         }
+
+//
 
     }
 

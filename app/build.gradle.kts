@@ -64,6 +64,7 @@ dependencies {
     implementation(libs.androidx.room.runtime)
     annotationProcessor(libs.androidx.room.compiler)
     ksp(libs.androidx.room.compiler)
+    implementation(libs.circleimageview)
 
     // To use Kotlin annotation processing tool (kapt)
 //    ksp(libs.androidx.room.compiler)

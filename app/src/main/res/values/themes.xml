@@ -24,10 +24,10 @@
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.ModuleApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >
-        <item name="colorPrimary">@color/white</item>
-        <item name="colorPrimaryVariant">@color/black</item>
-    </style>
+<!--    <style name="Theme.ModuleApp.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" >-->
+<!--        <item name="colorPrimary">@color/white</item>-->
+<!--        <item name="colorPrimaryVariant">@color/black</item>-->
+<!--    </style>-->
 
     <style name="Theme.ModuleApp.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

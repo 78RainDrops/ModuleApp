@@ -1,8 +1,15 @@
 package com.tshs.moduleapp.ui
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.FrameLayout
+import android.widget.TextView
+import android.widget.Toast
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.navigation.NavigationView
 import androidx.navigation.findNavController
@@ -12,9 +19,11 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import com.tshs.moduleapp.R
 import com.tshs.moduleapp.account.data.LoginHelper
 import com.tshs.moduleapp.databinding.ActivityDashboardBinding
+import de.hdodenhof.circleimageview.CircleImageView
 
 class Dashboard : AppCompatActivity() {
 
@@ -46,11 +55,19 @@ class Dashboard : AppCompatActivity() {
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+
+
+//        userprofile
+        val userProfile = findViewById<View>(R.id.circle_profile_image)
+        userProfile.setOnClickListener{
+            val intent = Intent(this, UserProfile::class.java)
+            startActivity(intent)
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // Inflate the menu; this adds items to the action bar if it is present.
-        menuInflater.inflate(R.menu.dashboard, menu)
+        menuInflater.inflate(R.menu.main, menu)
         return true
     }
 
@@ -67,4 +84,5 @@ class Dashboard : AppCompatActivity() {
 
         return super.onOptionsItemSelected(item)
     }
+
 }
